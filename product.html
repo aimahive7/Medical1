@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Product details - SHOBHA MEDICAL STORES">
+    <title>Product Details - SHOBHA MEDICAL STORES</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        .product-page {
+            padding: var(--spacing-xl) 0;
+            min-height: 100vh;
+        }
+
+        .product-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-2xl);
+            margin-bottom: var(--spacing-2xl);
+        }
+
+        .product-gallery {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-md);
+            position: stickyЗ;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .main-image {
+            width: 100%;
+            height: 500px;
+            border-radius: var(--radius-md);
+            background: var(--off-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .main-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .product-details {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-md);
+        }
+
+        .product-category-tag {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: var(--gradient-primary);
+            color: var(--white);
+            border-radius: var(--radius-full);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .product-title {
+            font-size: 2rem;
+            margin-bottom: var(--spacing-md);
+            color: var(--text-primary);
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .stars {
+            display: flex;
+            gap: 0.25rem;
+            color: #FFA500;
+        }
+
+        .rating-text {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .product-price-section {
+            padding: var(--spacing-lg);
+            background: linear-gradient(145deg, var(--off-white), var(--white));
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .price-row {
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .current-price {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+        }
+
+        .original-price {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            text-decoration: line-through;
+        }
+
+        .discount-badge {
+            padding: 0.375rem 0.875rem;
+            background: var(--danger);
+            color: var(--white);
+            border-radius: var(--radius-full);
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .price-note {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .availability {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: var(--spacing-md);
+            background: rgba(40, 167, 69, 0.1);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .availability.out-of-stock {
+            background: rgba(220, 53, 69, 0.1);
+        }
+
+        .availability i {
+            color: var(--success);
+            font-size: 1.25rem;
+        }
+
+        .availability.out-of-stock i {
+            color: var(--danger);
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .quantity-label {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        .qty-btn {
+            width: 45px;
+            height: 45px;
+            background: var(--off-white);
+            color: var(--text-primary);
+            border: none;
+            font-size: 1.25rem;
+            transition: var(--transition-fast);
+        }
+
+        .qty-btn:hover {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        .qty-value {
+            width: 60px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.125rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .btn-buy {
+            flex: 2;
+            padding: 1rem 2rem;
+            background: var(--gradient-secondary);
+            color: var(--white);
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            font-size: 1.125rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-buy:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-add-cart {
+            flex: 2;
+            padding: 1rem 2rem;
+            background: var(--gradient-primary);
+            color: var(--white);
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            font-size: 1.125rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-add-cart:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-wishlist {
+            width: 60px;
+            height: 60px;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+        }
+
+        .btn-wishlist:hover {
+            background: var(--danger);
+            color: var(--white);
+            border-color: var(--danger);
+        }
+
+        .product-description {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .product-description h3 {
+            font-size: 1.25rem;
+            margin-bottom: var(--spacing-md);
+            color: var(--text-primary);
+        }
+
+        .product-description p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .product-features {
+            background: var(--off-white);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-md);
+        }
+
+        .product-features h3 {
+            font-size: 1.25rem;
+            margin-bottom: var(--spacing-md);
+            color: var(--text-primary);
+        }
+
+        .features-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: start;
+            gap: 0.75rem;
+        }
+
+        .feature-item i {
+            color: var(--primary-color);
+            margin-top: 0.25rem;
+        }
+
+        @media (max-width: 968px) {
+            .product-container {
+                grid-template-columns: 1fr;
+            }
+
+            .main-image {
+                height: 350px;
+            }
+
+            .product-title {
+                font-size: 1.5rem;
+            }
+
+            .current-price {
+                font-size: 2rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header id="header">
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-wrapper">
+                    <div class="logo">
+                        <i class="fas fa-clinic-medical"></i>
+                        <div class="logo-text">
+                            <span class="logo-name">SHOBHA</span>
+                            <span class="logo-subtitle">Medical Stores</span>
+                        </div>
+                    </div>
+
+                    <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle Menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+
+                    <div class="nav-menu" id="navMenu">
+                        <a href="index.html" class="nav-link">Home</a>
+                        <a href="products.html" class="nav-link">Products</a>
+                        <a href="about.html" class="nav-link">About Us</a>
+                        <a href="contact.html" class="nav-link">Contact</a>
+                        <a href="prescription.html" class="nav-link prescription-link">
+                            <i class="fas fa-prescription"></i> Upload Prescription
+                        </a>
+                    </div>
+
+                    <div class="nav-actions">
+                        <button class="search-toggle" id="searchToggle" aria-label="Search">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        <button class="cart-btn" id="cartBtn" aria-label="Shopping Cart">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="cart-count" id="cartCount">0</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="search-bar" id="searchBar">
+            <div class="container">
+                <div class="search-wrapper">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search for medicines, cosmetics, supplements...">
+                    <button class="search-close" id="searchClose">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Product Page -->
+    <section class="product-page">
+        <div class="container">
+            <div class="breadcrumbs" style="margin-bottom: 2rem;">
+                <a href="index.html">Home</a>
+                <span>/</span>
+                <a href="products.html">Products</a>
+                <span>/</span>
+                <span id="breadcrumbProduct">Product</span>
+            </div>
+
+            <div class="product-container" id="productContainer">
+                <!-- Product will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <div class="footer-logo">
+                        <i class="fas fa-clinic-medical"></i>
+                        <div class="logo-text">
+                            <span class="logo-name">SHOBHA</span>
+                            <span class="logo-subtitle">Medical Stores</span>
+                        </div>
+                    </div>
+                    <p class="footer-description">Your trusted healthcare partner providing quality medicines,
+                        cosmetics, and health supplements since 1995.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="prescription.html">Upload Prescription</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Categories</h4>
+                    <ul class="footer-links">
+                        <li><a href="products.html?category=medicines">Medicines</a></li>
+                        <li><a href="products.html?category=cosmetics">Cosmetics</a></li>
+                        <li><a href="products.html?category=baby-care">Baby Care</a></li>
+                        <li><a href="products.html?category=supplements">Supplements</a></li>
+                        <li><a href="products.html?category=packed-food">Packed Food</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Contact Us</h4>
+                    <ul class="footer-contact">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>123 Main Street, Medical Plaza<br>City, State 123456</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone"></i>
+                            <span>+91 9970670610</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>info@shobhamedical.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 Shobha Medical Stores. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Return Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Float -->
+    <a href="https://wa.me/+919970670610" class="whatsapp-float" target="_blank" aria-label="WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+        <span class="whatsapp-tooltip">Need Help? Chat with us!</span>
+    </a>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
+            <button class="cart-close" id="cartClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <div class="cart-empty">
+                <i class="fas fa-shopping-cart"></i>
+                <p>Your cart is empty</p>
+            </div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span class="total-amount" id="totalAmount">₹0.00</span>
+            </div>
+            <button class="btn btn-primary btn-block" id="checkoutBtn">
+                Proceed to Checkout <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="overlay" id="cartOverlay"></div>
+
+    <script src="script.js"></script>
+    <script>
+        let currentProduct = null;
+        let quantity = 1;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProduct();
+        });
+
+        function loadProduct() {
+            const params = new URLSearchParams(window.location.search);
+            const productId = parseInt(params.get('id'));
+
+            if (!productId) {
+                window.location.href = 'products.html';
+                return;
+            }
+
+            currentProduct = window.products.find(p => p.id === productId);
+
+            if (!currentProduct) {
+                window.location.href = 'products.html';
+                return;
+            }
+
+            renderProduct();
+        }
+
+        function renderProduct() {
+            const container = document.getElementById('productContainer');
+            const breadcrumb = document.getElementById('breadcrumbProduct');
+
+            if (breadcrumb) {
+                breadcrumb.textContent = currentProduct.name;
+            }
+
+            const stars = generateStars(currentProduct.rating || 4.5);
+
+            container.innerHTML = `
+                <div class="product-gallery">
+                    <div class="main-image">
+                        <img src="${currentProduct.image}" alt="${currentProduct.name}">
+                    </div>
+                </div>
+
+                <div class="product-details">
+                    <span class="product-category-tag">${currentProduct.category.replace('-', ' ').toUpperCase()}</span>
+                    <h1 class="product-title">${currentProduct.name}</h1>
+
+                    <div class="product-rating">
+                        <div class="stars">${stars}</div>
+                        <span class="rating-text">${currentProduct.rating || 4.5} (250 reviews)</span>
+                    </div>
+
+                    <div class="product-price-section">
+                        <div class="price-row">
+                            <span class="current-price">₹${currentProduct.price}</span>
+                            ${currentProduct.originalPrice ? `
+                                <span class="original-price">₹${currentProduct.originalPrice}</span>
+                                <span class="discount-badge">-${currentProduct.discount}%</span>
+                            ` : ''}
+                        </div>
+                        <p class="price-note">Inclusive of all taxes</p>
+                    </div>
+
+                    <div class="availability ${currentProduct.inStock ? '' : 'out-of-stock'}">
+                        <i class="fas fa-${currentProduct.inStock ? 'check-circle' : 'times-circle'}"></i>
+                        <span>${currentProduct.inStock ? 'In Stock - Ready to Ship' : 'Out of Stock'}</span>
+                    </div>
+
+                    <div class="quantity-selector">
+                        <span class="quantity-label">Quantity:</span>
+                        <div class="quantity-controls">
+                            <button class="qty-btn" onclick="changeQuantity(-1)">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <span class="qty-value" id="qtyValue">1</span>
+                            <button class="qty-btn" onclick="changeQuantity(1)">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn-buy" onclick="buyNow()">
+                            <i class="fas fa-bolt"></i> Buy Now
+                        </button>
+                        <button class="btn-add-cart" onclick="addToCartProduct()">
+                            <i class="fas fa-shopping-cart"></i> Add to Cart
+                        </button>
+                        <button class="btn-wishlist" onclick="toggleWishlist(${currentProduct.id})">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+
+                    <div class="product-description">
+                        <h3>Product Description</h3>
+                        <p>${currentProduct.description || 'High-quality product from trusted manufacturers. Guaranteed genuine and authentic.'}</p>
+                    </div>
+
+                    <div class="product-features">
+                        <h3>Key Features</h3>
+                        <div class="features-list">
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>100% Authentic Product</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Same Day Delivery Available</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Easy Returns & Refunds</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Secure Payment Options</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateStars(rating) {
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 >= 0.5;
+            let stars = '';
+
+            for (let i = 0; i < fullStars; i++) {
+                stars += '<i class="fas fa-star"></i>';
+            }
+            if (hasHalfStar) {
+                stars += '<i class="fas fa-star-half-alt"></i>';
+            }
+            const emptyStars = 5 - Math.ceil(rating);
+            for (let i = 0; i < emptyStars; i++) {
+                stars += '<i class="far fa-star"></i>';
+            }
+
+            return stars;
+        }
+
+        function changeQuantity(change) {
+            quantity = Math.max(1, quantity + change);
+            document.getElementById('qtyValue').textContent = quantity;
+        }
+
+        function addToCartProduct() {
+            if (!currentProduct) return;
+
+            for (let i = 0; i < quantity; i++) {
+                window.addToCart(currentProduct.id);
+            }
+        }
+
+        function buyNow() {
+            if (!currentProduct) return;
+
+            addToCartProduct();
+            setTimeout(() => {
+                window.handleCheckout();
+            }, 300);
+        }
+    </script>
+</body>
+
+</html>

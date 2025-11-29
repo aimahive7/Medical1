@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Upload your prescription to SHOBHA MEDICAL STORES - Quick and easy prescription processing">
+    <title>Upload Prescription - SHOBHA MEDICAL STORES</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        .prescription-hero {
+            background: var(--gradient-hero);
+            padding: var(--spacing-2xl) 0;
+            text-align: center;
+            color: var(--white);
+        }
+
+        .prescription-hero h1 {
+            font-size: 3rem;
+            margin-bottom: var(--spacing-md);
+            color: var(--white);
+        }
+
+        .prescription-hero p {
+            font-size: 1.25rem;
+            opacity: 0.95;
+        }
+
+        .prescription-section {
+            padding: var(--spacing-2xl) 0;
+        }
+
+        .prescription-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .upload-card {
+            background: var(--white);
+            padding: var(--spacing-2xl);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .upload-card h2 {
+            font-size: 2rem;
+            margin-bottom: var(--spacing-lg);
+            text-align: center;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .upload-steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-2xl);
+        }
+
+        .step {
+            text-align: center;
+            padding: var(--spacing-md);
+            background: var(--off-white);
+            border-radius: var(--radius-md);
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto var(--spacing-sm);
+        }
+
+        .step h3 {
+            font-size: 1rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .step p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .form-group {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.875rem 1.25rem;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--radius-md);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: var(--transition-fast);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 168, 150, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .file-upload-area {
+            border: 3px dashed var(--primary-color);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-2xl);
+            text-align: center;
+            background: linear-gradient(145deg, var(--off-white), var(--white));
+            cursor: pointer;
+            transition: var(--transition-normal);
+            position: relative;
+        }
+
+        .file-upload-area:hover {
+            background: var(--off-white);
+            transform: scale(1.02);
+        }
+
+        .file-upload-area.drag-over {
+            background: rgba(0, 168, 150, 0.1);
+            border-color: var(--primary-dark);
+        }
+
+        .upload-icon {
+            font-size: 5rem;
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .upload-text h3 {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-text p {
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .upload-text small {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .file-preview {
+            margin-top: var(--spacing-md);
+            padding: var(--spacing-md);
+            background: var(--off-white);
+            border-radius: var(--radius-md);
+            display: none;
+        }
+
+        .file-preview.active {
+            display: block;
+        }
+
+        .preview-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-md);
+            background: var(--white);
+            border-radius: var(--radius-sm);
+            margin-bottom: 0.75rem;
+        }
+
+        .preview-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .preview-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .file-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.5rem;
+        }
+
+        .file-details h4 {
+            font-size: 1rem;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .file-details p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .remove-file {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: transparent;
+            color: var(--danger);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-fast);
+        }
+
+        .remove-file:hover {
+            background: var(--danger);
+            color: var(--white);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1.25rem 2rem;
+            background: var(--gradient-primary);
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: var(--transition-normal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-top: var(--spacing-lg);
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg), var(--shadow-glow);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .info-box {
+            background: linear-gradient(145deg, rgba(74, 144, 226, 0.1), rgba(0, 168, 150, 0.1));
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-md);
+            margin-top: var(--spacing-2xl);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .info-box h3 {
+            font-size: 1.25rem;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-box ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-box li {
+            padding: 0.5rem 0;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: start;
+            gap: 0.75rem;
+        }
+
+        .info-box li i {
+            color: var(--primary-color);
+            margin-top: 0.25rem;
+        }
+
+        @media (max-width: 768px) {
+            .prescription-hero h1 {
+                font-size: 2rem;
+            }
+
+            .upload-steps {
+                grid-template-columns: 1fr;
+            }
+
+            .upload-icon {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header id="header">
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-wrapper">
+                    <div class="logo">
+                        <i class="fas fa-clinic-medical"></i>
+                        <div class="logo-text">
+                            <span class="logo-name">SHOBHA</span>
+                            <span class="logo-subtitle">Medical Stores</span>
+                        </div>
+                    </div>
+
+                    <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle Menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+
+                    <div class="nav-menu" id="navMenu">
+                        <a href="index.html" class="nav-link">Home</a>
+                        <a href="products.html" class="nav-link">Products</a>
+                        <a href="about.html" class="nav-link">About Us</a>
+                        <a href="contact.html" class="nav-link">Contact</a>
+                        <a href="prescription.html" class="nav-link prescription-link active">
+                            <i class="fas fa-prescription"></i> Upload Prescription
+                        </a>
+                    </div>
+
+                    <div class="nav-actions">
+                        <button class="search-toggle" id="searchToggle" aria-label="Search">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        <button class="cart-btn" id="cartBtn" aria-label="Shopping Cart">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="cart-count" id="cartCount">0</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="search-bar" id="searchBar">
+            <div class="container">
+                <div class="search-wrapper">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search for medicines, cosmetics, supplements...">
+                    <button class="search-close" id="searchClose">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Prescription Hero -->
+    <section class="prescription-hero">
+        <div class="container">
+            <h1>Upload Your Prescription</h1>
+            <p>Quick, easy, and secure prescription processing</p>
+        </div>
+    </section>
+
+    <!-- Prescription Upload Section -->
+    <section class="prescription-section">
+        <div class="container">
+            <div class="prescription-container">
+                <div class="upload-card">
+                    <h2>How It Works</h2>
+
+                    <div class="upload-steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <h3>Upload</h3>
+                            <p>Upload your prescription image</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <h3>Review</h3>
+                            <p>We'll verify and process it</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <h3>Confirm</h3>
+                            <p>Get confirmation via WhatsApp</p>
+                        </div>
+                    </div>
+
+                    <form id="prescriptionForm">
+                        <div class="form-group">
+                            <label for="patientName">Patient Name *</label>
+                            <input type="text" id="patientName" name="patientName" required
+                                placeholder="Enter patient's full name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phoneNumber">Phone Number *</label>
+                            <input type="tel" id="phoneNumber" name="phoneNumber" required
+                                placeholder="Enter your phone number">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="address">Delivery Address *</label>
+                            <textarea id="address" name="address" required
+                                placeholder="Enter complete delivery address"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Upload Prescription *</label>
+                            <div class="file-upload-area" id="fileUploadArea">
+                                <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                                <div class="upload-text">
+                                    <h3>Drag & Drop or Click to Upload</h3>
+                                    <p>Upload clear images of your prescription</p>
+                                    <small>Supported formats: JPG, PNG, PDF (Max size: 5MB)</small>
+                                </div>
+                                <input type="file" id="fileInput" accept="image/*,.pdf" multiple>
+                            </div>
+
+                            <div class="file-preview" id="filePreview">
+                                <!-- File previews will be added here -->
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="notes">Additional Notes (Optional)</label>
+                            <textarea id="notes" name="notes"
+                                placeholder="Any specific instructions or requirements..."></textarea>
+                        </div>
+
+                        <button type="submit" class="submit-btn" id="submitBtn" disabled>
+                            <i class="fab fa-whatsapp"></i> Send to WhatsApp
+                        </button>
+                    </form>
+
+                    <div class="info-box">
+                        <h3><i class="fas fa-info-circle"></i> Important Information</h3>
+                        <ul>
+                            <li>
+                                <i class="fas fa-check-circle"></i>
+                                <span>Ensure your prescription is clear, readable, and includes doctor's
+                                    signature</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-check-circle"></i>
+                                <span>We'll confirm medicine availability and pricing via WhatsApp</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-check-circle"></i>
+                                <span>Delivery typically within 2-4 hours for local areas</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-check-circle"></i>
+                                <span>Your prescription details are kept confidential and secure</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-check-circle"></i>
+                                <span>For urgent requirements, call us at +91 9970670610</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <div class="footer-logo">
+                        <i class="fas fa-clinic-medical"></i>
+                        <div class="logo-text">
+                            <span class="logo-name">SHOBHA</span>
+                            <span class="logo-subtitle">Medical Stores</span>
+                        </div>
+                    </div>
+                    <p class="footer-description">Your trusted healthcare partner providing quality medicines,
+                        cosmetics, and health supplements since 1995.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="prescription.html">Upload Prescription</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Categories</h4>
+                    <ul class="footer-links">
+                        <li><a href="products.html?category=medicines">Medicines</a></li>
+                        <li><a href="products.html?category=cosmetics">Cosmetics</a></li>
+                        <li><a href="products.html?category=baby-care">Baby Care</a></li>
+                        <li><a href="products.html?category=supplements">Supplements</a></li>
+                        <li><a href="products.html?category=packed-food">Packed Food</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Contact Us</h4>
+                    <ul class="footer-contact">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>123 Main Street, Medical Plaza<br>City, State 123456</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone"></i>
+                            <span>+91 9970670610</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>info@shobhamedical.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 Shobha Medical Stores. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Return Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Float -->
+    <a href="https://wa.me/+919970670610" class="whatsapp-float" target="_blank" aria-label="WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+        <span class="whatsapp-tooltip">Need Help? Chat with us!</span>
+    </a>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
+            <button class="cart-close" id="cartClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <div class="cart-empty">
+                <i class="fas fa-shopping-cart"></i>
+                <p>Your cart is empty</p>
+            </div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span class="total-amount" id="totalAmount">₹0.00</span>
+            </div>
+            <button class="btn btn-primary btn-block" id="checkoutBtn">
+                Proceed to Checkout <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="overlay" id="cartOverlay"></div>
+
+    <script src="script.js"></script>
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const fileUploadArea = document.getElementById('fileUploadArea');
+        const filePreview = document.getElementById('filePreview');
+        const submitBtn = document.getElementById('submitBtn');
+        let uploadedFiles = [];
+
+        // Click to upload
+        fileUploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // Drag and drop
+        fileUploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            fileUploadArea.classList.add('drag-over');
+        });
+
+        fileUploadArea.addEventListener('dragleave', () => {
+            fileUploadArea.classList.remove('drag-over');
+        });
+
+        fileUploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fileUploadArea.classList.remove('drag-over');
+            const files = e.dataTransfer.files;
+            handleFiles(files);
+        });
+
+        // File input change
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        function handleFiles(files) {
+            for (let file of files) {
+                if (file.size > 5 * 1024 * 1024) {
+                    window.showNotification('File size should not exceed 5MB', 'warning');
+                    continue;
+                }
+
+                uploadedFiles.push(file);
+                addFilePreview(file);
+            }
+
+            updateSubmitButton();
+        }
+
+        function addFilePreview(file) {
+            filePreview.classList.add('active');
+
+            const previewItem = document.createElement('div');
+            previewItem.className = 'preview-item';
+
+            const fileSize = (file.size / 1024).toFixed(2) + ' KB';
+            const fileIcon = file.type.includes('pdf') ? 'fa-file-pdf' : 'fa-file-image';
+
+            previewItem.innerHTML = `
+                <div class="preview-info">
+                    <div class="file-icon">
+                        <i class="fas ${fileIcon}"></i>
+                    </div>
+                    <div class="file-details">
+                        <h4>${file.name}</h4>
+                        <p>${fileSize}</p>
+                    </div>
+                </div>
+                <button type="button" class="remove-file" onclick="removeFile('${file.name}')">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+
+            filePreview.appendChild(previewItem);
+        }
+
+        function removeFile(fileName) {
+            uploadedFiles = uploadedFiles.filter(f => f.name !== fileName);
+
+            // Remove preview
+            const previews = filePreview.querySelectorAll('.preview-item');
+            previews.forEach(preview => {
+                if (preview.textContent.includes(fileName)) {
+                    preview.remove();
+                }
+            });
+
+            if (uploadedFiles.length === 0) {
+                filePreview.classList.remove('active');
+            }
+
+            updateSubmitButton();
+        }
+
+        function updateSubmitButton() {
+            submitBtn.disabled = uploadedFiles.length === 0;
+        }
+
+        // Form submission
+        document.getElementById('prescriptionForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const patientName = formData.get('patientName');
+            const phoneNumber = formData.get('phoneNumber');
+            const address = formData.get('address');
+            const notes = formData.get('notes');
+
+            // Create WhatsApp message
+            let message = `*Prescription Upload Request*\n\n`;
+            message += `*Patient Name:* ${patientName}\n`;
+            message += `*Phone:* ${phoneNumber}\n`;
+            message += `*Address:* ${address}\n`;
+
+            if (notes) {
+                message += `*Notes:* ${notes}\n`;
+            }
+
+            message += `\n*Attached Files:* ${uploadedFiles.length} file(s)\n`;
+            uploadedFiles.forEach((file, index) => {
+                message += `${index + 1}. ${file.name}\n`;
+            });
+
+            message += `\nPlease confirm the medicines available and total cost.`;
+
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappURL = `https://wa.me/+919970670610?text=${encodedMessage}`;
+
+            // Show success notification
+            window.showNotification('Redirecting to WhatsApp... Please send the prescription images separately.', 'success');
+
+            // Open WhatsApp
+            setTimeout(() => {
+                window.open(whatsappURL, '_blank');
+                // Reset form
+                this.reset();
+                uploadedFiles = [];
+                filePreview.classList.remove('active');
+                filePreview.innerHTML = '';
+                updateSubmitButton();
+            }, 2000);
+        });
+
+        // Make removeFile global
+        window.removeFile = removeFile;
+    </script>
+</body>
+
+</html>

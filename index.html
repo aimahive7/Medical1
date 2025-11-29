@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="SHOBHA MEDICAL STORES - Your trusted pharmacy for medicines, cosmetics, beauty products, and health supplements. Fast delivery and prescription services available.">
+    <meta name="keywords" content="pharmacy, medical store, medicines, cosmetics, health supplements, prescription">
+    <title>SHOBHA MEDICAL STORES - Your Trusted Healthcare Partner</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <!-- Header & Navigation -->
+    <header id="header">
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-wrapper">
+                    <div class="logo">
+                        <i class="fas fa-clinic-medical"></i>
+                        <div class="logo-text">
+                            <span class="logo-name">SHOBHA</span>
+                            <span class="logo-subtitle">Medical Stores</span>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Menu Toggle -->
+                    <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle Menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+
+                    <!-- Navigation Menu -->
+                    <div class="nav-menu" id="navMenu">
+                        <a href="index.html" class="nav-link active">Home</a>
+                        <a href="products.html" class="nav-link">Products</a>
+                        <a href="about.html" class="nav-link">About Us</a>
+                        <a href="contact.html" class="nav-link">Contact</a>
+                        <a href="prescription.html" class="nav-link prescription-link">
+                            <i class="fas fa-prescription"></i> Upload Prescription
+                        </a>
+                    </div>
+
+                    <!-- Nav Actions -->
+                    <div class="nav-actions">
+                        <button class="search-toggle" id="searchToggle" aria-label="Search">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        <button class="cart-btn" id="cartBtn" aria-label="Shopping Cart">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="cart-count" id="cartCount">0</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Search Bar -->
+        <div class="search-bar" id="searchBar">
+            <div class="container">
+                <div class="search-wrapper">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search for medicines, cosmetics, supplements...">
+                    <button class="search-close" id="searchClose">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-slider" id="heroSlider">
+            <!-- Slide 1 -->
+            <div class="hero-slide active">
+                <div class="hero-overlay"></div>
+                <div class="container">
+                    <div class="hero-content">
+                        <span class="hero-badge">Trusted Since 1995</span>
+                        <h1 class="hero-title">Your Health, Our Priority</h1>
+                        <p class="hero-description">Quality medicines, cosmetics & health supplements delivered to your
+                            doorstep</p>
+                        <div class="hero-buttons">
+                            <a href="products.html" class="btn btn-primary">
+                                <i class="fas fa-shopping-bag"></i> Shop Now
+                            </a>
+                            <a href="prescription.html" class="btn btn-secondary">
+                                <i class="fas fa-prescription"></i> Upload Prescription
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="hero-slide">
+                <div class="hero-overlay"></div>
+                <div class="container">
+                    <div class="hero-content">
+                        <span class="hero-badge">Special Offer</span>
+                        <h1 class="hero-title">Up to 30% Off on Cosmetics</h1>
+                        <p class="hero-description">Premium skincare and beauty products at unbeatable prices</p>
+                        <div class="hero-buttons">
+                            <a href="products.html?category=cosmetics" class="btn btn-primary">
+                                <i class="fas fa-sparkles"></i> Shop Cosmetics
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3 -->
+            <div class="hero-slide">
+                <div class="hero-overlay"></div>
+                <div class="container">
+                    <div class="hero-content">
+                        <span class="hero-badge">Health First</span>
+                        <h1 class="hero-title">Premium Health Supplements</h1>
+                        <p class="hero-description">Boost your immunity with our wide range of vitamins & supplements
+                        </p>
+                        <div class="hero-buttons">
+                            <a href="products.html?category=supplements" class="btn btn-primary">
+                                <i class="fas fa-capsules"></i> View Supplements
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slider Controls -->
+        <button class="slider-control prev" id="sliderPrev">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="slider-control next" id="sliderNext">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+
+        <!-- Slider Dots -->
+        <div class="slider-dots" id="sliderDots"></div>
+    </section>
+
+    <!-- Quick Services -->
+    <section class="quick-services">
+        <div class="container">
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-shipping-fast"></i>
+                    </div>
+                    <h3>Fast Delivery</h3>
+                    <p>Same day delivery available</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>100% Authentic</h3>
+                    <p>Genuine products guaranteed</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3>24/7 Support</h3>
+                    <p>Always here to help you</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-prescription-bottle"></i>
+                    </div>
+                    <h3>Prescription Service</h3>
+                    <p>Easy upload & quick processing</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Categories -->
+    <section class="categories">
+        <div class="container">
+            <div class="section-header">
+                <h2>Shop by Category</h2>
+                <p>Browse our wide range of healthcare products</p>
+            </div>
+
+            <div class="categories-grid">
+                <a href="products.html?category=medicines" class="category-card">
+                    <div class="category-icon">
+                        <i class="fas fa-pills"></i>
+                    </div>
+                    <h3>Medicines</h3>
+                    <p>OTC & Prescription</p>
+                    <span class="category-arrow"><i class="fas fa-arrow-right"></i></span>
+                </a>
+
+                <a href="products.html?category=cosmetics" class="category-card">
+                    <div class="category-icon">
+                        <i class="fas fa-spa"></i>
+                    </div>
+                    <h3>Cosmetics</h3>
+                    <p>Skin & Hair Care</p>
+                    <span class="category-arrow"><i class="fas fa-arrow-right"></i></span>
+                </a>
+
+                <a href="products.html?category=baby-care" class="category-card">
+                    <div class="category-icon">
+                        <i class="fas fa-baby"></i>
+                    </div>
+                    <h3>Baby Care</h3>
+                    <p>Diapers & Baby Products</p>
+                    <span class="category-arrow"><i class="fas fa-arrow-right"></i></span>
+                </a>
+
+                <a href="products.html?category=personal-care" class="category-card">
+                    <div class="category-icon">
+                        <i class="fas fa-hand-sparkles"></i>
+                    </div>
+                    <h3>Personal Care</h3>
+                    <p>Oral & Body Care</p>
+                    <span class="category-arrow"><i class="fas fa-arrow-right"></i></span>
+                </a>
+
+                <a href="products.html?category=supplements" class="category-card">
+                    <div class="category-icon">
+                        <i class="fas fa-capsules"></i>
+                    </div>
+                    <h3>Supplements</h3>
+                    <p>Vitamins & Protein</p>
+                    <span class="category-arrow"><i class="fas fa-arrow-right"></i></span>
+                </a>
+
+                <a href="products.html?category=packed-food" class="category-card">
+                    <div class="category-icon">
+                        <i class="fas fa-cookie-bite"></i>
+                    </div>
+                    <h3>Packed Food</h3>
+                    <p>Healthy Snacks</p>
+                    <span class="category-arrow"><i class="fas fa-arrow-right"></i></span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section class="featured-products">
+        <div class="container">
+            <div class="section-header">
+                <h2>Top Selling Products</h2>
+                <p>Most popular items this month</p>
+            </div>
+
+            <div class="products-grid" id="featuredProducts">
+                <!-- Products will be dynamically loaded -->
+            </div>
+
+            <div class="section-footer">
+                <a href="products.html" class="btn btn-outline">
+                    View All Products <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Special Offers -->
+    <section class="special-offers">
+        <div class="container">
+            <div class="offers-grid">
+                <div class="offer-card offer-primary">
+                    <div class="offer-content">
+                        <span class="offer-badge">Limited Time</span>
+                        <h3>Flat 20% OFF</h3>
+                        <p>On all diabetes care products</p>
+                        <a href="products.html?category=medicines&subcategory=diabetes" class="btn btn-light">Shop
+                            Now</a>
+                    </div>
+                    <div class="offer-icon">
+                        <i class="fas fa-tag"></i>
+                    </div>
+                </div>
+
+                <div class="offer-card offer-secondary">
+                    <div class="offer-content">
+                        <span class="offer-badge">Best Deals</span>
+                        <h3>Buy 2 Get 1 Free</h3>
+                        <p>On selected cosmetic products</p>
+                        <a href="products.html?category=cosmetics" class="btn btn-light">Explore Deals</a>
+                    </div>
+                    <div class="offer-icon">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section class="why-choose-us">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why Choose Shobha Medical Stores?</h2>
+                <p>Your trusted healthcare partner for over 25 years</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <h3>Licensed & Certified</h3>
+                    <p>All our products are sourced from authorized distributors and manufacturers</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <h3>Expert Pharmacists</h3>
+                    <p>Qualified pharmacists available for consultation and guidance</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>Quick Service</h3>
+                    <p>Fast prescription processing and same-day delivery options</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <h3>Best Prices</h3>
+                    <p>Competitive pricing with regular discounts and offers</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <div class="footer-logo">
+                        <i class="fas fa-clinic-medical"></i>
+                        <div class="logo-text">
+                            <span class="logo-name">SHOBHA</span>
+                            <span class="logo-subtitle">Medical Stores</span>
+                        </div>
+                    </div>
+                    <p class="footer-description">Your trusted healthcare partner providing quality medicines,
+                        cosmetics, and health supplements since 1995.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="prescription.html">Upload Prescription</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Categories</h4>
+                    <ul class="footer-links">
+                        <li><a href="products.html?category=medicines">Medicines</a></li>
+                        <li><a href="products.html?category=cosmetics">Cosmetics</a></li>
+                        <li><a href="products.html?category=baby-care">Baby Care</a></li>
+                        <li><a href="products.html?category=supplements">Supplements</a></li>
+                        <li><a href="products.html?category=packed-food">Packed Food</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Contact Us</h4>
+                    <ul class="footer-contact">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>123 Main Street, Medical Plaza<br>City, State 123456</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone"></i>
+                            <span>+919970670610</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>info@shobhamedical.com</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-clock"></i>
+                            <span>Mon-Sat: 8AM - 10PM<br>Sunday: 9AM - 6PM</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 Shobha Medical Stores. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Return Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/+919970670610?text=Hello%2C%20I%20need%20help%20with%20an%20order" class="whatsapp-float"
+        target="_blank" aria-label="Contact on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+        <span class="whatsapp-tooltip">Need Help? Chat with us!</span>
+    </a>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
+            <button class="cart-close" id="cartClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="cart-items" id="cartItems">
+            <div class="cart-empty">
+                <i class="fas fa-shopping-cart"></i>
+                <p>Your cart is empty</p>
+            </div>
+        </div>
+
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span class="total-amount" id="totalAmount">₹0.00</span>
+            </div>
+            <button class="btn btn-primary btn-block" id="checkoutBtn">
+                Proceed to Checkout <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Cart Overlay -->
+    <div class="overlay" id="cartOverlay"></div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

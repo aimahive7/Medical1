@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Browse our wide range of medicines, cosmetics, supplements, and healthcare products at SHOBHA MEDICAL STORES">
+    <title>Products - SHOBHA MEDICAL STORES</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        .products-page {
+            padding: var(--spacing-xl) 0;
+            min-height: 100vh;
+        }
+
+        .products-header {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .products-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing-sm);
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .breadcrumbs {
+            display: flex;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .breadcrumbs a {
+            color: var(--primary-color);
+        }
+
+        .products-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: var(--spacing-xl);
+        }
+
+        .filters-sidebar {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+            background: var(--white);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .filter-section {
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-lg);
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .filter-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .filter-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-md);
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .filter-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .filter-option:hover {
+            color: var(--primary-color);
+        }
+
+        .filter-option input[type="checkbox"],
+        .filter-option input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--primary-color);
+        }
+
+        .filter-option label {
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .price-range {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .price-input {
+            flex: 1;
+            padding: 0.5rem;
+            border: 1px solid var(--light-gray);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+        }
+
+        .filter-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--gradient-primary);
+            color: var(--white);
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            margin-top: var(--spacing-md);
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .clear-filters {
+            width: 100%;
+            padding: 0.75rem;
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--light-gray);
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            margin-top: 0.5rem;
+        }
+
+        .clear-filters:hover {
+            background: var(--light-gray);
+        }
+
+        .products-main {
+            min-height: 500px;
+        }
+
+        .products-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+        }
+
+        .products-count {
+            color: var(--text-secondary);
+        }
+
+        .products-sort {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .sort-select {
+            padding: 0.625rem 1rem;
+            border: 1px solid var(--light-gray);
+            border-radius: var(--radius-md);
+            background: var(--white);
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .view-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            background: var(--off-white);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .view-btn.active {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        .no-products {
+            text-align: center;
+            padding: var(--spacing-2xl);
+            color: var(--text-secondary);
+        }
+
+        .no-products i {
+            font-size: 4rem;
+            margin-bottom: var(--spacing-md);
+            opacity: 0.3;
+        }
+
+        .mobile-filter-toggle {
+            display: none;
+            width: 100%;
+            padding: 0.875rem;
+            background: var(--gradient-primary);
+            color: var(--white);
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+        }
+
+        @media (max-width: 968px) {
+            .products-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .filters-sidebar {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                width: 320px;
+                height: 100vh;
+                z-index: var(--z-modal);
+                overflow-y: auto;
+                transition: left var(--transition-normal);
+            }
+
+            .filters-sidebar.active {
+                left: 0;
+            }
+
+            .mobile-filter-toggle {
+                display: block;
+            }
+
+            .filter-close {
+                display: block;
+                width: 100%;
+                padding: 0.75rem;
+                background: var(--light-gray);
+                color: var(--text-primary);
+                border-radius: var(--radius-md);
+                margin-bottom: var(--spacing-md);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header & Navigation -->
+    <header id="header">
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-wrapper">
+                    <div class="logo">
+                        <i class="fas fa-clinic-medical"></i>
+                        <div class="logo-text">
+                            <span class="logo-name">SHOBHA</span>
+                            <span class="logo-subtitle">Medical Stores</span>
+                        </div>
+                    </div>
+
+                    <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle Menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+
+                    <div class="nav-menu" id="navMenu">
+                        <a href="index.html" class="nav-link">Home</a>
+                        <a href="products.html" class="nav-link active">Products</a>
+                        <a href="about.html" class="nav-link">About Us</a>
+                        <a href="contact.html" class="nav-link">Contact</a>
+                        <a href="prescription.html" class="nav-link prescription-link">
+                            <i class="fas fa-prescription"></i> Upload Prescription
+                        </a>
+                    </div>
+
+                    <div class="nav-actions">
+                        <button class="search-toggle" id="searchToggle" aria-label="Search">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        <button class="cart-btn" id="cartBtn" aria-label="Shopping Cart">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="cart-count" id="cartCount">0</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="search-bar" id="searchBar">
+            <div class="container">
+                <div class="search-wrapper">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search for medicines, cosmetics, supplements...">
+                    <button class="search-close" id="searchClose">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Products Page -->
+    <section class="products-page">
+        <div class="container">
+            <div class="products-header">
+                <div class="breadcrumbs">
+                    <a href="index.html">Home</a>
+                    <span>/</span>
+                    <span>Products</span>
+                </div>
+                <h1>Our Products</h1>
+            </div>
+
+            <button class="mobile-filter-toggle" id="mobileFilterToggle">
+                <i class="fas fa-filter"></i> Filters
+            </button>
+
+            <div class="products-layout">
+                <!-- Filters Sidebar -->
+                <aside class="filters-sidebar" id="filtersSidebar">
+                    <button class="filter-close" id="filterClose" style="display: none;">
+                        <i class="fas fa-times"></i> Close Filters
+                    </button>
+
+                    <!-- Category Filter -->
+                    <div class="filter-section">
+                        <h3 class="filter-title">Category</h3>
+                        <div class="filter-options">
+                            <div class="filter-option">
+                                <input type="checkbox" id="cat-all" value="all" checked>
+                                <label for="cat-all">All Products</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="cat-medicines" value="medicines">
+                                <label for="cat-medicines">Medicines</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="cat-cosmetics" value="cosmetics">
+                                <label for="cat-cosmetics">Cosmetics</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="cat-baby-care" value="baby-care">
+                                <label for="cat-baby-care">Baby Care</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="cat-personal-care" value="personal-care">
+                                <label for="cat-personal-care">Personal Care</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="cat-supplements" value="supplements">
+                                <label for="cat-supplements">Supplements</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="cat-packed-food" value="packed-food">
+                                <label for="cat-packed-food">Packed Food</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Price Range Filter -->
+                    <div class="filter-section">
+                        <h3 class="filter-title">Price Range</h3>
+                        <div class="price-range">
+                            <input type="number" class="price-input" id="minPrice" placeholder="Min" min="0">
+                            <span>-</span>
+                            <input type="number" class="price-input" id="maxPrice" placeholder="Max" min="0">
+                        </div>
+                    </div>
+
+                    <!-- Discount Filter -->
+                    <div class="filter-section">
+                        <h3 class="filter-title">Discount</h3>
+                        <div class="filter-options">
+                            <div class="filter-option">
+                                <input type="radio" name="discount" id="disc-all" value="all" checked>
+                                <label for="disc-all">All</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="radio" name="discount" id="disc-10" value="10">
+                                <label for="disc-10">10% & above</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="radio" name="discount" id="disc-20" value="20">
+                                <label for="disc-20">20% & above</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="radio" name="discount" id="disc-30" value="30">
+                                <label for="disc-30">30% & above</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Availability Filter -->
+                    <div class="filter-section">
+                        <h3 class="filter-title">Availability</h3>
+                        <div class="filter-options">
+                            <div class="filter-option">
+                                <input type="checkbox" id="in-stock" value="in-stock" checked>
+                                <label for="in-stock">In Stock Only</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="filter-btn" id="applyFilters">Apply Filters</button>
+                    <button class="clear-filters" id="clearFilters">Clear All</button>
+                </aside>
+
+                <!-- Products Main -->
+                <div class="products-main">
+                    <div class="products-toolbar">
+                        <div class="products-count" id="productsCount">
+                            Showing 0 products
+                        </div>
+                        <div class="products-sort">
+                            <label>Sort by:</label>
+                            <select class="sort-select" id="sortSelect">
+                                <option value="featured">Featured</option>
+                                <option value="price-low">Price: Low to High</option>
+                                <option value="price-high">Price: High to Low</option>
+                                <option value="name-az">Name: A-Z</option>
+                                <option value="name-za">Name: Z-A</option>
+                                <option value="discount">Discount</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="products-grid" id="productsGrid">
+                        <!-- Products will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <div class="footer-logo">
+                        <i class="fas fa-clinic-medical"></i>
+                        <div class="logo-text">
+                            <span class="logo-name">SHOBHA</span>
+                            <span class="logo-subtitle">Medical Stores</span>
+                        </div>
+                    </div>
+                    <p class="footer-description">Your trusted healthcare partner providing quality medicines,
+                        cosmetics, and health supplements since 1995.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="prescription.html">Upload Prescription</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Categories</h4>
+                    <ul class="footer-links">
+                        <li><a href="products.html?category=medicines">Medicines</a></li>
+                        <li><a href="products.html?category=cosmetics">Cosmetics</a></li>
+                        <li><a href="products.html?category=baby-care">Baby Care</a></li>
+                        <li><a href="products.html?category=supplements">Supplements</a></li>
+                        <li><a href="products.html?category=packed-food">Packed Food</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Contact Us</h4>
+                    <ul class="footer-contact">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>123 Main Street, Medical Plaza<br>City, State 123456</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone"></i>
+                            <span>+91 9970670610</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>info@shobhamedical.com</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-clock"></i>
+                            <span>Mon-Sat: 8AM - 10PM<br>Sunday: 9AM - 6PM</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 Shobha Medical Stores. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Return Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/+919970670610?text=Hello%2C%20I%20need%20help%20with%20an%20order" class="whatsapp-float"
+        target="_blank" aria-label="Contact on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+        <span class="whatsapp-tooltip">Need Help? Chat with us!</span>
+    </a>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
+            <button class="cart-close" id="cartClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="cart-items" id="cartItems">
+            <div class="cart-empty">
+                <i class="fas fa-shopping-cart"></i>
+                <p>Your cart is empty</p>
+            </div>
+        </div>
+
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span class="total-amount" id="totalAmount">₹0.00</span>
+            </div>
+            <button class="btn btn-primary btn-block" id="checkoutBtn">
+                Proceed to Checkout <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Cart Overlay -->
+    <div class="overlay" id="cartOverlay"></div>
+    <div class="overlay" id="filterOverlay"></div>
+
+    <script src="script.js"></script>
+    <script>
+        // Products page specific functionality
+        let allProducts = window.products || [];
+        let filteredProducts = [...allProducts];
+
+        // Initialize products page
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProducts();
+            initFilters();
+            handleURLParams();
+        });
+
+        function handleURLParams() {
+            const params = new URLSearchParams(window.location.search);
+            const category = params.get('category');
+            const search = params.get('search');
+
+            if (category) {
+                const checkbox = document.getElementById(`cat-${category}`);
+                if (checkbox) {
+                    document.getElementById('cat-all').checked = false;
+                    checkbox.checked = true;
+                }
+            }
+
+            applyFilters();
+        }
+
+        function loadProducts() {
+            renderProducts(filteredProducts);
+        }
+
+        function renderProducts(products) {
+            const grid = document.getElementById('productsGrid');
+            const count = document.getElementById('productsCount');
+
+            if (!grid) return;
+
+            if (products.length === 0) {
+                grid.innerHTML = `
+                    <div class="no-products">
+                        <i class="fas fa-search"></i>
+                        <h3>No products found</h3>
+                        <p>Try adjusting your filters</p>
+                    </div>
+                `;
+                count.textContent = 'No products found';
+                return;
+            }
+
+            grid.innerHTML = '';
+            products.forEach(product => {
+                const card = window.createProductCard ? window.createProductCard(product) : createFallbackCard(product);
+                grid.appendChild(card);
+            });
+
+            count.textContent = `Showing ${products.length} product${products.length !== 1 ? 's' : ''}`;
+        }
+
+        function createFallbackCard(product) {
+            const div = document.createElement('div');
+            div.innerHTML = `<p>${product.name}</p>`;
+            return div;
+        }
+
+        function initFilters() {
+            const applyBtn = document.getElementById('applyFilters');
+            const clearBtn = document.getElementById('clearFilters');
+            const sortSelect = document.getElementById('sortSelect');
+            const mobileToggle = document.getElementById('mobileFilterToggle');
+            const filterClose = document.getElementById('filterClose');
+            const sidebar = document.getElementById('filtersSidebar');
+
+            if (applyBtn) applyBtn.addEventListener('click', applyFilters);
+            if (clearBtn) clearBtn.addEventListener('click', clearFilters);
+            if (sortSelect) sortSelect.addEventListener('change', handleSort);
+
+            if (mobileToggle && sidebar) {
+                mobileToggle.addEventListener('click', () => {
+                    sidebar.classList.add('active');
+                    document.getElementById('filterOverlay').classList.add('active');
+                });
+            }
+
+            if (filterClose && sidebar) {
+                filterClose.addEventListener('click', () => {
+                    sidebar.classList.remove('active');
+                    document.getElementById('filterOverlay').classList.remove('active');
+                });
+            }
+        }
+
+        function applyFilters() {
+            let filtered = [...allProducts];
+
+            // Category filter
+            const categoryCheckboxes = document.querySelectorAll('[id^="cat-"]:checked');
+            const selectedCategories = Array.from(categoryCheckboxes)
+                .map(cb => cb.value)
+                .filter(v => v !== 'all');
+
+            if (selectedCategories.length > 0) {
+                filtered = filtered.filter(p => selectedCategories.includes(p.category));
+            }
+
+            // Price filter
+            const minPrice = parseFloat(document.getElementById('minPrice').value) || 0;
+            const maxPrice = parseFloat(document.getElementById('maxPrice').value) || Infinity;
+            filtered = filtered.filter(p => p.price >= minPrice && p.price <= maxPrice);
+
+            // Discount filter
+            const discountRadio = document.querySelector('[name="discount"]:checked');
+            const minDiscount = discountRadio ? parseInt(discountRadio.value) || 0 : 0;
+            if (minDiscount > 0) {
+                filtered = filtered.filter(p => (p.discount || 0) >= minDiscount);
+            }
+
+            // Availability filter
+            const inStockOnly = document.getElementById('in-stock').checked;
+            if (inStockOnly) {
+                filtered = filtered.filter(p => p.inStock);
+            }
+
+            filteredProducts = filtered;
+            handleSort();
+
+            // Close mobile filter
+            const sidebar = document.getElementById('filtersSidebar');
+            if (sidebar) {
+                sidebar.classList.remove('active');
+                document.getElementById('filterOverlay').classList.remove('active');
+            }
+        }
+
+        function clearFilters() {
+            // Clear category checkboxes
+            document.querySelectorAll('[id^="cat-"]').forEach(cb => {
+                cb.checked = cb.id === 'cat-all';
+            });
+
+            // Clear price inputs
+            document.getElementById('minPrice').value = '';
+            document.getElementById('maxPrice').value = '';
+
+            // Clear discount
+            document.getElementById('disc-all').checked = true;
+
+            // Reset availability
+            document.getElementById('in-stock').checked = true;
+
+            filteredProducts = [...allProducts];
+            renderProducts(filteredProducts);
+        }
+
+        function handleSort() {
+            const sortValue = document.getElementById('sortSelect').value;
+            let sorted = [...filteredProducts];
+
+            switch (sortValue) {
+                case 'price-low':
+                    sorted.sort((a, b) => a.price - b.price);
+                    break;
+                case 'price-high':
+                    sorted.sort((a, b) => b.price - a.price);
+                    break;
+                case 'name-az':
+                    sorted.sort((a, b) => a.name.localeCompare(b.name));
+                    break;
+                case 'name-za':
+                    sorted.sort((a, b) => b.name.localeCompare(a.name));
+                    break;
+                case 'discount':
+                    sorted.sort((a, b) => (b.discount || 0) - (a.discount || 0));
+                    break;
+                default:
+                    // Featured - keep original order
+                    break;
+            }
+
+            renderProducts(sorted);
+        }
+    </script>
+</body>
+
+</html>
