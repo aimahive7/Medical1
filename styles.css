@@ -1318,6 +1318,34 @@ ol {
     padding: var(--spacing-lg);
 }
 
+.cart-customer {
+    padding: 0 var(--spacing-lg) var(--spacing-lg) var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.cart-customer label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.cart-customer-input {
+    padding: 0.6rem 0.9rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--light-gray);
+    background: var(--off-white);
+    font-size: 0.95rem;
+    outline: none;
+    transition: box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+
+.cart-customer-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 18px rgba(0,168,150,0.08);
+}
+
 .cart-empty {
     text-align: center;
     padding: var(--spacing-2xl) 0;

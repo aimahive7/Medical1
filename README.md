@@ -1,3 +1,8 @@
+# Shobha Medical Stores - Demo
+This is a small static demo for a medical store.
+
+## New: Optional customer name on checkout
+When the cart sidebar is open you can now enter an optional "Customer name" before clicking "Proceed to Checkout". The site will include that name in the WhatsApp order message (and save it locally so it persists across page reloads). Files changed to add this feature: `script.js`, `styles.css`, and the cart markup in all pages (`index.html`, `products.html`, `product.html`, `about.html`, `contact.html`, `prescription.html`).
 # SHOBHA MEDICAL STORES - Ecommerce Website
 
 A modern, responsive ecommerce website for a medical store built with HTML, CSS, and JavaScript.

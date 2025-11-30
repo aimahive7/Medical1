@@ -345,6 +345,19 @@ function openCart() {
         cartSidebar.classList.add('active');
         cartOverlay.classList.add('active');
         renderCartItems();
+
+        // Prefill customer name input (if saved previously)
+        const nameInput = document.getElementById('customerName');
+        if (nameInput) {
+            const saved = localStorage.getItem('customerName') || '';
+            nameInput.value = saved;
+
+            // Save as user types so it persists between page loads
+            // set oninput directly to avoid registering multiple listeners on repeated opens
+            nameInput.oninput = (e) => {
+                localStorage.setItem('customerName', e.target.value);
+            };
+        }
     }
 }
 
@@ -485,8 +498,12 @@ function handleCheckout() {
     // Calculate total
     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
-    // Create WhatsApp message
-    let message = `*New Order from SHOBHA MEDICAL STORES*\n\n`;
+    // Read optional customer name from the cart field (fallback to stored value)
+    const nameEl = document.getElementById('customerName');
+    const customerName = (nameEl && nameEl.value && nameEl.value.trim()) ? nameEl.value.trim() : (localStorage.getItem('customerName') || '');
+
+    // Create WhatsApp message header (include name if provided)
+    let message = customerName ? `*New Order from ${customerName}*\n\n` : `*New Order from SHOBHA MEDICAL STORES*\n\n`;
     message += `*Items:*\n`;
 
     cart.forEach(item => {
@@ -494,6 +511,9 @@ function handleCheckout() {
     });
 
     message += `\n*Total: ₹${total.toFixed(2)}*\n\n`;
+    if (customerName) {
+        message += `*Customer:* ${customerName}\n\n`;
+    }
     message += `Please confirm this order.`;
 
     // Encode message for URL
