@@ -1184,8 +1184,44 @@ ol {
     color: rgba(255, 255, 255, 0.6);
 }
 
-.footer-bottom-links {
-    display: flex;
+
+    /* Collapse long filter lists on mobile and show a 'Show All' toggle */
+    .filter-options.collapsed {
+        max-height: 7.5rem; /* approx 3 items */
+        overflow: hidden;
+        position: relative;
+        transition: max-height var(--transition-normal);
+    }
+
+    .filter-options.collapsed::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 2.5rem;
+        background: linear-gradient(180deg, rgba(255,255,255,0), var(--off-white));
+        pointer-events: none;
+    }
+
+    .filter-options.expanded {
+        max-height: none;
+    }
+
+    .show-all-toggle {
+        display: inline-block;
+        width: 100%;
+        margin-top: 0.5rem;
+        padding: 0.5rem 0;
+        background: transparent;
+        border: none;
+        color: var(--primary-color);
+        font-weight: 700;
+        text-align: left;
+        cursor: pointer;
+    }
+
+}
     gap: var(--spacing-lg);
 }
 
@@ -1515,7 +1551,8 @@ ol {
     }
 
     .products-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-md);
     }
 
     .offer-card {
@@ -1525,5 +1562,62 @@ ol {
 
     .offer-icon {
         font-size: 3rem;
+    }
+
+    /* Reduce product image height on small screens so cards fit better */
+    .product-image {
+        height: 180px;
+    }
+
+    /* Mobile: hide product name, show compact buy UI */
+    .product-name {
+        display: none;
+    }
+
+    .product-category, .price-original {
+        font-size: 0.85rem;
+    }
+
+    .product-price {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        align-items: flex-start;
+    }
+
+    .product-actions {
+        width: 100%;
+        display: flex;
+        gap: 0.5rem;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .qty-input {
+        max-width: 90px;
+    }
+
+    /* Visual state for buttons when an item has been added */
+    .add-to-cart-btn.added {
+        background: var(--primary-dark) !important;
+        color: var(--white) !important;
+        border-color: transparent !important;
+        box-shadow: 0 6px 18px rgba(0,168,150,0.12);
+    }
+
+    .add-to-cart-btn[disabled],
+    .add-to-cart-btn.disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none !important;
+    }
+
+    /* Logo adjustments on mobile */
+    .logo-name {
+        font-size: 1.125rem;
+    }
+
+    .logo-subtitle {
+        display: none;
     }
 }

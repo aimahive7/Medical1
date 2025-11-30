@@ -52,10 +52,12 @@
             position: sticky;
             top: 100px;
             height: fit-content;
-            background: var(--white);
+            /* subtle tinted background to distinguish the side column */
+            background: linear-gradient(180deg, rgba(0,168,150,0.03), rgba(74,144,226,0.02));
             padding: var(--spacing-lg);
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-md);
+            border-left: 4px solid rgba(0,168,150,0.08);
         }
 
         .filter-section {
@@ -118,10 +120,14 @@
 
         .price-input {
             flex: 1;
-            padding: 0.5rem;
+            min-width: 0;
+            width: 100%;
+            padding: 0.6rem 0.75rem;
             border: 1px solid var(--light-gray);
             border-radius: var(--radius-sm);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+            background: var(--white);
         }
 
         .filter-btn {
@@ -587,6 +593,7 @@
             loadProducts();
             initFilters();
             handleURLParams();
+            initShowAllToggles();
         });
 
         function handleURLParams() {
@@ -667,6 +674,37 @@
                     document.getElementById('filterOverlay').classList.remove('active');
                 });
             }
+
+            // On desktop, apply filters immediately when a filter input changes
+            const desktopBreakpoint = 768;
+            const filterInputs = document.querySelectorAll('.filters-sidebar input');
+            let applyTimer = null;
+            filterInputs.forEach(input => {
+                input.addEventListener('change', (e) => {
+                    // always keep the 'All Products' checkbox behavior: uncheck others when 'all' checked
+                    if (input.id === 'cat-all') {
+                        if (input.checked) {
+                            document.querySelectorAll('[id^="cat-"]').forEach(cb => {
+                                if (cb.id !== 'cat-all') cb.checked = false;
+                            });
+                        }
+                    } else if (input.id && input.id.startsWith('cat-')) {
+                        // if another category is checked, uncheck 'cat-all'
+                        if (input.checked) {
+                            const allCb = document.getElementById('cat-all');
+                            if (allCb) allCb.checked = false;
+                        }
+                    }
+
+                    // If desktop width, trigger filters automatically (debounced)
+                    if (window.innerWidth > desktopBreakpoint) {
+                        clearTimeout(applyTimer);
+                        applyTimer = setTimeout(() => {
+                            applyFilters();
+                        }, 150);
+                    }
+                });
+            });
         }
 
         function applyFilters() {
@@ -757,6 +795,67 @@
             }
 
             renderProducts(sorted);
+        }
+
+        // Collapse long filter lists on mobile and add a Show All / Show Less toggle
+        function initShowAllToggles() {
+            const breakpoint = 768; // match mobile breakpoint
+            const sections = document.querySelectorAll('.filter-section');
+
+            sections.forEach(sec => {
+                const options = sec.querySelector('.filter-options');
+                if (!options) return;
+
+                const itemsCount = options.querySelectorAll('.filter-option').length;
+
+                // remove existing toggle if present (re-init safety)
+                const existingToggle = sec.querySelector('.show-all-toggle');
+                if (existingToggle) existingToggle.remove();
+
+                if (itemsCount > 3) {
+                    // apply collapsed state on mobile widths
+                    if (window.innerWidth <= breakpoint) {
+                        options.classList.add('collapsed');
+                        options.classList.remove('expanded');
+                    } else {
+                        options.classList.remove('collapsed');
+                        options.classList.remove('expanded');
+                    }
+
+                    const toggle = document.createElement('button');
+                    toggle.type = 'button';
+                    toggle.className = 'show-all-toggle';
+                    toggle.textContent = window.innerWidth <= breakpoint ? 'Show All' : 'Show All';
+
+                    toggle.addEventListener('click', () => {
+                        const isCollapsed = options.classList.contains('collapsed') && !options.classList.contains('expanded');
+                        if (isCollapsed) {
+                            options.classList.remove('collapsed');
+                            options.classList.add('expanded');
+                            toggle.textContent = 'Show Less';
+                        } else {
+                            options.classList.add('collapsed');
+                            options.classList.remove('expanded');
+                            toggle.textContent = 'Show All';
+                            toggle.scrollIntoView({ block: 'nearest' });
+                        }
+                    });
+
+                    sec.appendChild(toggle);
+                } else {
+                    options.classList.remove('collapsed');
+                    options.classList.remove('expanded');
+                }
+            });
+
+            // Recalculate on resize (debounced)
+            let resizeTimer = null;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    initShowAllToggles();
+                }, 150);
+            });
         }
     </script>
 </body>
