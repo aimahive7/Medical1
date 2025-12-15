@@ -486,7 +486,7 @@ function handleCheckout() {
     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
     // Create WhatsApp message
-    let message = `*New Order from SHOBHA MEDICAL STORES*\n\n`;
+    let message = `*Hello, I want to place an order.*\n\n`;
     message += `*Items:*\n`;
 
     cart.forEach(item => {

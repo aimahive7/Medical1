@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Product Management</title>
+    <link rel="stylesheet" href="admin-styles.css">
+</head>
+
+<body>
+    <div class="admin-container">
+        <!-- Header -->
+        <header class="admin-header">
+            <h1>🏥 Admin Panel</h1>
+            <nav>
+                <button class="nav-btn active" data-section="products">Products</button>
+                <button class="nav-btn" data-section="categories">Categories</button>
+            </nav>
+        </header>
+
+        <!-- Categories Section -->
+        <section id="categories-section" class="section hidden">
+            <div class="section-header">
+                <h2>Manage Categories</h2>
+            </div>
+            <div class="category-form-container">
+                <div class="input-group">
+                    <input type="text" id="category-name" placeholder="Category Name" class="form-input">
+                    <button id="add-category-btn" class="btn btn-primary">Add Category</button>
+                </div>
+            </div>
+            <div class="categories-list" id="categories-list">
+                <!-- Categories will be dynamically added here -->
+            </div>
+        </section>
+
+        <!-- Products Section -->
+        <section id="products-section" class="section">
+            <div class="section-header">
+                <h2>Manage Products</h2>
+                <button id="add-product-toggle" class="btn btn-primary">+ Add New Product</button>
+            </div>
+
+            <!-- Add Product Form -->
+            <div id="product-form-container" class="product-form-container hidden">
+                <form id="product-form" class="product-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="product-name">Product Name *</label>
+                            <input type="text" id="product-name" required class="form-input">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="product-category">Category *</label>
+                            <select id="product-category" required class="form-input">
+                                <option value="">Select Category</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="product-unit">Unit *</label>
+                            <input type="text" id="product-unit" placeholder="e.g., Tablets, ML, Bottles" required
+                                class="form-input">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="product-quantity">Quantity *</label>
+                            <input type="number" id="product-quantity" min="0" required class="form-input">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="product-price">Price (₹) *</label>
+                            <input type="number" id="product-price" min="0" step="0.01" required class="form-input">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="product-discount">Discount (%) </label>
+                            <input type="number" id="product-discount" min="0" max="100" step="0.01" class="form-input"
+                                value="0">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="product-composition">Composition *</label>
+                            <textarea id="product-composition" rows="3" required class="form-input"></textarea>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="product-description">Description (shown on hover) *</label>
+                            <textarea id="product-description" rows="4" required class="form-input"></textarea>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label>Product Images (Upload 2 or more) *</label>
+                            <div class="image-upload-container">
+                                <input type="file" id="product-images" accept="image/*" multiple class="file-input">
+                                <label for="product-images" class="file-label">
+                                    <span class="upload-icon">📷</span>
+                                    <span>Click to upload images</span>
+                                    <span class="upload-hint">Minimum 2 images required</span>
+                                </label>
+                            </div>
+                            <div id="image-preview-container" class="image-preview-container">
+                                <!-- Image previews will appear here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">Save Product</button>
+                        <button type="button" id="cancel-product" class="btn btn-secondary">Cancel</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Products List -->
+            <div class="products-table-container">
+                <table class="products-table" id="products-table">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Unit</th>
+                            <th>Quantity</th>
+                            <th>Composition</th>
+                            <th>Price</th>
+                            <th>Discount</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="products-tbody">
+                        <!-- Products will be dynamically added here -->
+                    </tbody>
+                </table>
+                <div id="no-products-message" class="no-data-message hidden">
+                    No products available. Add your first product!
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="admin-script.js"></script>
+</body>
+
+</html>
