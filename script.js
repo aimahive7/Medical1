@@ -5,20 +5,28 @@ let cart = JSON.parse(localStorage.getItem('cart')) || [];
 let currentSlide = 0;
 let slideInterval;
 
-// Sample Products Data
-const products = [
+// Load products from localStorage (added by admin) or use sample data
+let products = [];
+
+// Sample Products Data (used as fallback)
+const sampleProducts = [
     {
         id: 1,
         name: 'Paracetamol 500mg',
         category: 'medicines',
         subcategory: 'pain-relief',
-        price: 25,
-        originalPrice: 35,
+        price: 50, // price per strip
+        originalPrice: 70,
         discount: 28,
         image: 'https://via.placeholder.com/300x300/00A896/fff?text=Paracetamol',
         inStock: true,
-        description: 'Effective pain and fever relief. 10 tablets per strip.',
-        rating: 4.5
+        description: 'Effective pain and fever relief.',
+        rating: 4.5,
+        packaging: {
+            unitName: 'tablet',
+            unitsPerPack: 10,
+            sellBy: ['strip', 'piece'] // strip = full pack, piece = single tablet
+        }
     },
     {
         id: 2,
@@ -106,7 +114,123 @@ const products = [
         description: 'Supports heart and brain health. 60 softgels.',
         rating: 4.7
     }
+    ,
+    // --- Sample medicines demonstrating packaging & partial selling ---
+    {
+        id: 9,
+        name: 'Amoxicillin 250mg',
+        category: 'medicines',
+        price: 180, // per strip
+        originalPrice: 220,
+        discount: 18,
+        image: 'https://via.placeholder.com/300x300/FFB86C/fff?text=Amoxicillin',
+        inStock: true,
+        description: 'Antibiotic. 15 tablets per strip.',
+        rating: 4.4,
+        packaging: {
+            unitName: 'tablet',
+            unitsPerPack: 15,
+            sellBy: ['strip', 'piece']
+        }
+    },
+    {
+        id: 10,
+        name: 'Metformin 500mg',
+        category: 'medicines',
+        price: 120, // per pack (10 tablets)
+        originalPrice: 150,
+        discount: 20,
+        image: 'https://via.placeholder.com/300x300/9AE6B4/fff?text=Metformin',
+        inStock: true,
+        description: 'For blood sugar control. 10 tablets per pack.',
+        rating: 4.5,
+        packaging: {
+            unitName: 'tablet',
+            unitsPerPack: 10,
+            sellBy: ['pack', 'piece']
+        }
+    },
+    {
+        id: 11,
+        name: 'Diclofenac 50mg',
+        category: 'medicines',
+        price: 40, // per strip
+        originalPrice: 55,
+        discount: 27,
+        image: 'https://via.placeholder.com/300x300/E98585/fff?text=Diclofenac',
+        inStock: true,
+        description: 'Pain reliever. 8 tablets per strip.',
+        rating: 4.2,
+        packaging: {
+            unitName: 'tablet',
+            unitsPerPack: 8,
+            sellBy: ['strip', 'piece']
+        }
+    }
 ];
+
+// Initialize Products from localStorage (admin panel) or fallback to sample
+function loadProducts() {
+    const adminProducts = localStorage.getItem('medical_products');
+
+    if (adminProducts) {
+        try {
+            const parsedProducts = JSON.parse(adminProducts);
+            if (Array.isArray(parsedProducts) && parsedProducts.length > 0) {
+                // Convert admin products to match the format expected by the frontend
+                products = parsedProducts.map(p => {
+                    const finalPrice = p.price - (p.price * (p.discount || 0) / 100);
+                    const singleUnitPrice = p.conversion ? p.price / p.conversion : p.price;
+                    // Category-specific emoji mapping
+                    const categoryEmojis = {
+                        'Medicines': '💊',
+                        'Cosmetics': '💄',
+                        'Baby Care': '👶',
+                        'Personal Care': '🧴',
+                        'Supplements': '💪',
+                        'Packed Food': '🍪'
+                    };
+                    const categoryEmoji = categoryEmojis[p.category] || '💊';
+
+                    // Use category emoji placeholder if no images
+                    const hasImages = p.images && p.images.length > 0;
+                    const placeholderImage = 'data:image/svg+xml,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300"><defs><linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#00A896"/><stop offset="100%" style="stop-color:#4A90E2"/></linearGradient></defs><rect width="300" height="300" fill="url(#bg)" rx="20"/><text x="150" y="170" font-size="100" text-anchor="middle">${categoryEmoji}</text></svg>`);
+
+                    return {
+                        id: p.id,
+                        name: p.name,
+                        category: p.category.toLowerCase().replace(/\s+/g, '-'),
+                        price: finalPrice,
+                        originalPrice: p.discount > 0 ? p.price : null,
+                        discount: p.discount || 0,
+                        image: hasImages ? p.images[0] : placeholderImage,
+                        inStock: true, // Always in stock since we removed quantity
+                        description: p.description || `${p.name} - ${p.composition}`,
+                        rating: 4.5,
+                        packaging: p.conversion ? {
+                            unitName: p.singleUnit || 'unit',
+                            unitsPerPack: p.conversion || 1,
+                            sellBy: [p.packageUnit || 'pack', 'piece']
+                        } : null
+                    };
+                });
+                console.log('✅ Loaded', products.length, 'products from admin panel');
+                window.products = products; // Ensure global access
+                return;
+            }
+        } catch (e) {
+            console.error('Error loading admin products:', e);
+        }
+    }
+
+    // Fallback to sample products if no admin products found
+    products = [...sampleProducts];
+    window.products = products; // Ensure global access
+    console.log('📦 Using sample products (admin products not found)');
+}
+
+// Load products immediately when script loads (not waiting for DOM)
+loadProducts();
 
 // ================================
 // INITIALIZATION
@@ -345,6 +469,19 @@ function openCart() {
         cartSidebar.classList.add('active');
         cartOverlay.classList.add('active');
         renderCartItems();
+
+        // Prefill customer name input (if saved previously)
+        const nameInput = document.getElementById('customerName');
+        if (nameInput) {
+            const saved = localStorage.getItem('customerName') || '';
+            nameInput.value = saved;
+
+            // Save as user types so it persists between page loads
+            // set oninput directly to avoid registering multiple listeners on repeated opens
+            nameInput.oninput = (e) => {
+                localStorage.setItem('customerName', e.target.value);
+            };
+        }
     }
 }
 
@@ -358,19 +495,45 @@ function closeCart() {
     }
 }
 
-function addToCart(productId) {
+function addToCart(productId, unit = 'pack', qty = 1) {
     const product = products.find(p => p.id === productId);
 
     if (!product) return;
 
-    const existingItem = cart.find(item => item.id === productId);
+    // Determine per-unit price depending on requested unit
+    let unitLabel = 'pack';
+    let unitMultiplier = 1; // price multiplier to apply to base product.price
+
+    if (unit === 'piece' || unit === 'tablet') {
+        const unitsPerPack = product.packaging && product.packaging.unitsPerPack ? product.packaging.unitsPerPack : 1;
+        unitLabel = product.packaging && product.packaging.unitName ? product.packaging.unitName : 'unit';
+        unitMultiplier = 1 / unitsPerPack;
+    } else {
+        // pack/strip default
+        unitLabel = (product.packaging && (product.packaging.sellBy && product.packaging.sellBy[0])) || 'pack';
+        unitMultiplier = 1;
+    }
+
+    const pricePerSelectedUnit = +(product.price * unitMultiplier);
+
+    // Create a unique cart id for combination of product + unit
+    const cartId = `${productId}__${unit}`;
+
+    const existingItem = cart.find(item => item.cartId === cartId);
 
     if (existingItem) {
-        existingItem.quantity += 1;
+        existingItem.quantity += qty;
     } else {
         cart.push({
-            ...product,
-            quantity: 1
+            cartId,
+            id: product.id,
+            name: product.name,
+            image: product.image,
+            unit: unit,
+            unitLabel: unit === 'piece' || unit === 'tablet' ? (product.packaging && product.packaging.unitName ? product.packaging.unitName : 'unit') : (product.packaging && product.packaging.sellBy ? product.packaging.sellBy[0] : 'pack'),
+            unitsPerPack: product.packaging && product.packaging.unitsPerPack ? product.packaging.unitsPerPack : 1,
+            price: +(pricePerSelectedUnit),
+            quantity: qty
         });
     }
 
@@ -386,23 +549,38 @@ function addToCart(productId) {
             cartBtn.style.transform = 'scale(1)';
         }, 300);
     }
+    return cartId;
 }
 
-function removeFromCart(productId) {
-    cart = cart.filter(item => item.id !== productId);
+function removeFromCart(cartId) {
+    cart = cart.filter(item => item.cartId !== cartId);
     saveCart();
     updateCartCount();
     renderCartItems();
+    // Remove 'added' visual state from any buttons for this product/unit
+    try {
+        const parts = cartId.split('__');
+        const pid = parts[0];
+        const unit = parts[1];
+        const selector = `[data-id="${pid}"][data-unit="${unit}"]`;
+        document.querySelectorAll(selector).forEach(btn => {
+            btn.classList.remove('added');
+            btn.disabled = false;
+            btn.classList.remove('disabled');
+        });
+    } catch (e) {
+        // ignore
+    }
 }
 
-function updateCartQuantity(productId, change) {
-    const item = cart.find(item => item.id === productId);
+function updateCartQuantity(cartId, change) {
+    const item = cart.find(item => item.cartId === cartId);
 
     if (item) {
         item.quantity += change;
 
         if (item.quantity <= 0) {
-            removeFromCart(productId);
+            removeFromCart(cartId);
         } else {
             saveCart();
             renderCartItems();
@@ -441,19 +619,19 @@ function renderCartItems() {
                     <img src="${item.image}" alt="${item.name}">
                 </div>
                 <div class="cart-item-details">
-                    <h4>${item.name}</h4>
-                    <p class="cart-item-price">₹${item.price}</p>
+                    <h4>${item.name} <small style="color:var(--text-secondary); font-weight:600;">(${item.unitLabel})</small></h4>
+                    <p class="cart-item-price">₹${item.price.toFixed(2)}</p>
                     <div class="cart-item-quantity">
-                        <button onclick="updateCartQuantity(${item.id}, -1)" class="qty-btn">
+                        <button onclick="updateCartQuantity('${item.cartId}', -1)" class="qty-btn">
                             <i class="fas fa-minus"></i>
                         </button>
                         <span>${item.quantity}</span>
-                        <button onclick="updateCartQuantity(${item.id}, 1)" class="qty-btn">
+                        <button onclick="updateCartQuantity('${item.cartId}', 1)" class="qty-btn">
                             <i class="fas fa-plus"></i>
                         </button>
                     </div>
                 </div>
-                <button onclick="removeFromCart(${item.id})" class="cart-item-remove">
+                <button onclick="removeFromCart('${item.cartId}')" class="cart-item-remove">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
@@ -485,8 +663,12 @@ function handleCheckout() {
     // Calculate total
     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
-    // Create WhatsApp message
-    let message = `*Hello, I want to place an order.*\n\n`;
+    // Read optional customer name from the cart field (fallback to stored value)
+    const nameEl = document.getElementById('customerName');
+    const customerName = (nameEl && nameEl.value && nameEl.value.trim()) ? nameEl.value.trim() : (localStorage.getItem('customerName') || '');
+
+    // Create WhatsApp message header (include name if provided)
+    let message = customerName ? `*New Order from ${customerName}*\n\n` : `*New Order from SHOBHA MEDICAL STORES*\n\n`;
     message += `*Items:*\n`;
 
     cart.forEach(item => {
@@ -494,6 +676,9 @@ function handleCheckout() {
     });
 
     message += `\n*Total: ₹${total.toFixed(2)}*\n\n`;
+    if (customerName) {
+        message += `*Customer:* ${customerName}\n\n`;
+    }
     message += `Please confirm this order.`;
 
     // Encode message for URL
@@ -537,12 +722,25 @@ function createProductCard(product) {
             <div class="product-price">
                 <span class="price-current">₹${product.price}</span>
                 ${product.originalPrice ? `<span class="price-original">₹${product.originalPrice}</span>` : ''}
+                ${product.packaging && product.packaging.unitsPerPack ? `<div style="font-size:0.9rem;color:var(--text-secondary);margin-top:6px;">or ₹${(product.price / product.packaging.unitsPerPack).toFixed(2)} per ${product.packaging.unitName}</div>` : ''}
             </div>
             <div class="product-actions">
-                <button class="add-to-cart-btn" onclick="addToCart(${product.id})">
-                    <i class="fas fa-shopping-cart"></i> Add to Cart
-                </button>
-                <button class="wishlist-btn" onclick="toggleWishlist(${product.id})">
+                ${product.packaging && product.packaging.unitsPerPack ? `
+                    <div class="pack-actions" style="display:flex;gap:0.5rem;align-items:center;">
+                        <button class="add-to-cart-btn" data-add data-id="${product.id}" data-unit="${product.packaging.sellBy && product.packaging.sellBy[0] ? product.packaging.sellBy[0] : 'pack'}">
+                            <i class="fas fa-shopping-cart"></i> Add ${product.packaging.sellBy && product.packaging.sellBy[0] ? product.packaging.sellBy[0] : 'Pack'}
+                        </button>
+                        <div style="display:flex;gap:0.5rem;align-items:center;">
+                                <input type="number" min="1" max="${product.packaging.unitsPerPack}" value="1" class="qty-input" id="qty-input-${product.id}" style="width:72px;padding:0.5rem;border:1px solid var(--light-gray);border-radius:8px;" />
+                                <button class="add-to-cart-btn qty-buy" data-add data-id="${product.id}" data-unit="piece">Buy Tablets</button>
+                            </div>
+                    </div>
+                ` : `
+                    <button class="add-to-cart-btn" data-add data-id="${product.id}" data-unit="pack">
+                        <i class="fas fa-shopping-cart"></i> Add to Cart
+                    </button>
+                `}
+                <button class="wishlist-btn" data-wishlist data-id="${product.id}">
                     <i class="far fa-heart"></i>
                 </button>
             </div>
@@ -552,11 +750,62 @@ function createProductCard(product) {
     // Make product clickable
     card.style.cursor = 'pointer';
     card.addEventListener('click', (e) => {
-        // Don't navigate if clicking on buttons
-        if (!e.target.closest('button')) {
+        // Don't navigate if clicking on buttons or inputs
+        if (!e.target.closest('button') && !e.target.closest('input')) {
             window.location.href = `product.html?id=${product.id}`;
         }
     });
+
+    // Attach listeners for add-to-cart buttons created with data attributes
+    const addButtons = card.querySelectorAll('[data-add]');
+    addButtons.forEach(btn => {
+        btn.addEventListener('click', (ev) => {
+            ev.stopPropagation();
+            const id = parseInt(btn.getAttribute('data-id'));
+            const unit = btn.getAttribute('data-unit') || 'pack';
+            if (unit === 'piece') {
+                const input = card.querySelector(`#qty-input-${product.id}`);
+                let qty = input ? parseInt(input.value) || 1 : 1;
+                const min = input && input.min ? parseInt(input.min) : 1;
+                const max = input && input.max ? parseInt(input.max) : Infinity;
+                if (qty < min) qty = min;
+                if (qty > max) {
+                    qty = max;
+                    if (input) input.value = qty;
+                    showNotification(`Max ${product.packaging.unitName} per action is ${max}`, 'warning');
+                }
+                const cartId = addToCart(id, 'piece', qty);
+                // mark button as added
+                if (cartId) {
+                    btn.classList.add('added');
+                }
+            } else {
+                const cartId = addToCart(id, unit, 1);
+                if (cartId) {
+                    btn.classList.add('added');
+                }
+            }
+        });
+    });
+
+    // Reflect existing cart state: mark buttons as added if this product/unit is already in cart
+    addButtons.forEach(btn => {
+        const bid = parseInt(btn.getAttribute('data-id'));
+        const bunit = btn.getAttribute('data-unit') || 'pack';
+        const existing = cart.find(item => item.id === bid && item.unit === bunit);
+        if (existing) {
+            btn.classList.add('added');
+        }
+    });
+
+    // Wishlist button handling
+    const wishBtn = card.querySelector('[data-wishlist]');
+    if (wishBtn) {
+        wishBtn.addEventListener('click', (ev) => {
+            ev.stopPropagation();
+            toggleWishlist(product.id);
+        });
+    }
 
     return card;
 }
