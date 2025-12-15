@@ -53,11 +53,11 @@
             top: 100px;
             height: fit-content;
             /* subtle tinted background to distinguish the side column */
-            background: linear-gradient(180deg, rgba(0,168,150,0.03), rgba(74,144,226,0.02));
+            background: linear-gradient(180deg, rgba(0, 168, 150, 0.03), rgba(74, 144, 226, 0.02));
             padding: var(--spacing-lg);
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-md);
-            border-left: 4px solid rgba(0,168,150,0.08);
+            border-left: 4px solid rgba(0, 168, 150, 0.08);
         }
 
         .filter-section {
@@ -570,7 +570,8 @@
             </div>
             <div class="cart-customer">
                 <label for="customerName">Customer name (optional)</label>
-                <input id="customerName" class="cart-customer-input" type="text" placeholder="Enter customer name (optional)">
+                <input id="customerName" class="cart-customer-input" type="text"
+                    placeholder="Enter customer name (optional)">
             </div>
             <button class="btn btn-primary btn-block" id="checkoutBtn">
                 Proceed to Checkout <i class="fas fa-arrow-right"></i>
@@ -581,20 +582,41 @@
     <!-- Cart Overlay -->
     <div class="overlay" id="cartOverlay"></div>
     <div class="overlay" id="filterOverlay"></div>
-
     <script src="script.js"></script>
     <script>
         // Products page specific functionality
-        let allProducts = window.products || [];
-        let filteredProducts = [...allProducts];
+        let allProducts = [];
+        let filteredProducts = [];
 
         // Initialize products page
         document.addEventListener('DOMContentLoaded', () => {
-            loadProducts();
-            initFilters();
-            handleURLParams();
-            initShowAllToggles();
+            initProductsPage();
         });
+
+        function initProductsPage() {
+            // Get products from window (loaded by script.js)
+            allProducts = window.products || [];
+            filteredProducts = [...allProducts];
+
+            console.log('📋 Products page: Found', allProducts.length, 'products');
+
+            // If no products yet, retry after a short delay (script.js may still be loading)
+            if (allProducts.length === 0) {
+                setTimeout(() => {
+                    allProducts = window.products || [];
+                    filteredProducts = [...allProducts];
+                    console.log('📋 Products page (retry): Found', allProducts.length, 'products');
+
+                    initFilters();
+                    handleURLParams();
+                    initShowAllToggles();
+                }, 200);
+            } else {
+                initFilters();
+                handleURLParams();
+                initShowAllToggles();
+            }
+        }
 
         function handleURLParams() {
             const params = new URLSearchParams(window.location.search);

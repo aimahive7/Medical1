@@ -24,11 +24,18 @@ function loadData() {
     categories = savedCategories ? JSON.parse(savedCategories) : [];
     products = savedProducts ? JSON.parse(savedProducts) : [];
 
-    // Add default categories if none exist
-    if (categories.length === 0) {
-        categories = ['Medicines', 'Supplements', 'Medical Equipment', 'Personal Care'];
+    // Use the 6 fixed categories that match the products page
+    // These categories must match exactly with the category filters on products.html
+    if (categories.length === 0 || !categoriesMatchRequired(categories)) {
+        categories = ['Medicines', 'Cosmetics', 'Baby Care', 'Personal Care', 'Supplements', 'Packed Food'];
         saveCategories();
     }
+}
+
+// Check if categories match the required 6 categories
+function categoriesMatchRequired(cats) {
+    const requiredCategories = ['Medicines', 'Cosmetics', 'Baby Care', 'Personal Care', 'Supplements', 'Packed Food'];
+    return requiredCategories.every(rc => cats.includes(rc));
 }
 
 // Save functions
@@ -61,6 +68,10 @@ function initializeEventListeners() {
     document.getElementById('cancel-product').addEventListener('click', cancelProductForm);
     document.getElementById('product-form').addEventListener('submit', saveProduct);
     document.getElementById('product-images').addEventListener('change', handleImageUpload);
+
+    // Auto-calculate single unit price
+    document.getElementById('product-price').addEventListener('input', calculateSingleUnitPrice);
+    document.getElementById('product-conversion').addEventListener('input', calculateSingleUnitPrice);
 }
 
 // Section switching
@@ -155,7 +166,21 @@ function cancelProductForm() {
     document.getElementById('product-form').reset();
     uploadedImages = [];
     currentEditingProduct = null;
+    document.getElementById('product-single-price').value = '';
     renderImagePreviews();
+}
+
+// Calculate single unit price based on package price and conversion
+function calculateSingleUnitPrice() {
+    const packagePrice = parseFloat(document.getElementById('product-price').value) || 0;
+    const conversion = parseFloat(document.getElementById('product-conversion').value) || 1;
+
+    if (packagePrice > 0 && conversion > 0) {
+        const singleUnitPrice = packagePrice / conversion;
+        document.getElementById('product-single-price').value = singleUnitPrice.toFixed(2);
+    } else {
+        document.getElementById('product-single-price').value = '';
+    }
 }
 
 // Image Upload Handling
@@ -199,23 +224,21 @@ function renderImagePreviews() {
 function saveProduct(e) {
     e.preventDefault();
 
-    // Validate images
-    if (uploadedImages.length < 2) {
-        alert('Please upload at least 2 product images');
-        return;
-    }
+    // Images are now optional - use medical emoji placeholder if no images
+    const productImages = uploadedImages.length > 0 ? [...uploadedImages] : [];
 
     const productData = {
         id: currentEditingProduct ? currentEditingProduct.id : Date.now(),
         name: document.getElementById('product-name').value,
         category: document.getElementById('product-category').value,
-        unit: document.getElementById('product-unit').value,
-        quantity: parseInt(document.getElementById('product-quantity').value),
+        packageUnit: document.getElementById('product-package-unit').value,
+        singleUnit: document.getElementById('product-single-unit').value,
+        conversion: parseInt(document.getElementById('product-conversion').value),
         composition: document.getElementById('product-composition').value,
         price: parseFloat(document.getElementById('product-price').value),
         discount: parseFloat(document.getElementById('product-discount').value) || 0,
         description: document.getElementById('product-description').value,
-        images: [...uploadedImages]
+        images: productImages
     };
 
     if (currentEditingProduct) {
@@ -237,17 +260,21 @@ function editProduct(id) {
     if (!product) return;
 
     currentEditingProduct = product;
-    uploadedImages = [...product.images];
+    uploadedImages = product.images ? [...product.images] : [];
 
     // Populate form
     document.getElementById('product-name').value = product.name;
     document.getElementById('product-category').value = product.category;
-    document.getElementById('product-unit').value = product.unit;
-    document.getElementById('product-quantity').value = product.quantity;
+    document.getElementById('product-package-unit').value = product.packageUnit || product.unit || '';
+    document.getElementById('product-single-unit').value = product.singleUnit || 'Unit';
+    document.getElementById('product-conversion').value = product.conversion || 1;
     document.getElementById('product-composition').value = product.composition;
     document.getElementById('product-price').value = product.price;
     document.getElementById('product-discount').value = product.discount;
     document.getElementById('product-description').value = product.description;
+
+    // Calculate and show single unit price
+    calculateSingleUnitPrice();
 
     // Show form
     document.getElementById('product-form-container').classList.remove('hidden');
@@ -279,25 +306,56 @@ function renderProducts() {
     noProductsMsg.classList.add('hidden');
 
     tbody.innerHTML = products.map(product => {
-        const finalPrice = product.price - (product.price * product.discount / 100);
+        const finalPackagePrice = product.price - (product.price * product.discount / 100);
+        const conversion = product.conversion || 1;
+        const singleUnitPrice = product.price / conversion;
+        const finalSingleUnitPrice = finalPackagePrice / conversion;
+
+        // For backwards compatibility with old products
+        const packageUnit = product.packageUnit || product.unit || 'Package';
+        const singleUnit = product.singleUnit || 'Unit';
+        const conversionText = `1 ${packageUnit} = ${conversion} ${singleUnit}${conversion > 1 ? 's' : ''}`;
+
+        // Category-specific emoji mapping
+        const categoryEmojis = {
+            'Medicines': '💊',
+            'Cosmetics': '💄',
+            'Baby Care': '👶',
+            'Personal Care': '🧴',
+            'Supplements': '💪',
+            'Packed Food': '🍪'
+        };
+        const categoryEmoji = categoryEmojis[product.category] || '💊';
+
+        // Use category emoji placeholder if no images
+        const productImage = product.images && product.images.length > 0
+            ? `<img src="${product.images[0]}" alt="${product.name}" class="product-image">`
+            : `<div class="product-image-placeholder" style="font-size: 40px; display: flex; align-items: center; justify-content: center; width: 60px; height: 60px; background: linear-gradient(135deg, #00A896, #4A90E2); border-radius: 8px;">${categoryEmoji}</div>`;
 
         return `
             <tr>
                 <td>
-                    <img src="${product.images[0]}" alt="${product.name}" class="product-image">
+                    ${productImage}
                 </td>
                 <td><strong>${product.name}</strong></td>
                 <td>${product.category}</td>
-                <td>${product.unit}</td>
-                <td>${product.quantity}</td>
+                <td>
+                    <span style="font-size: 12px; color: #666;">${conversionText}</span>
+                </td>
                 <td class="product-composition">
                     ${product.composition.substring(0, 30)}...
                     <span class="tooltip">${product.composition}</span>
                 </td>
                 <td>
                     ${product.discount > 0 ?
-                `<del>₹${product.price.toFixed(2)}</del><br><strong>₹${finalPrice.toFixed(2)}</strong>` :
+                `<del>₹${product.price.toFixed(2)}</del><br><strong>₹${finalPackagePrice.toFixed(2)}</strong>` :
                 `₹${product.price.toFixed(2)}`
+            }
+                </td>
+                <td>
+                    ${product.discount > 0 ?
+                `<del>₹${singleUnitPrice.toFixed(2)}</del><br><strong>₹${finalSingleUnitPrice.toFixed(2)}</strong>` :
+                `₹${singleUnitPrice.toFixed(2)}`
             }
                 </td>
                 <td>${product.discount > 0 ? product.discount + '%' : 'N/A'}</td>

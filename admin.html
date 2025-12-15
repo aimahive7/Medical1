@@ -59,19 +59,32 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="product-unit">Unit *</label>
-                            <input type="text" id="product-unit" placeholder="e.g., Tablets, ML, Bottles" required
+                            <label for="product-package-unit">Package Unit *</label>
+                            <input type="text" id="product-package-unit" placeholder="e.g., Strip, Bottle, Box" required
                                 class="form-input">
                         </div>
 
                         <div class="form-group">
-                            <label for="product-quantity">Quantity *</label>
-                            <input type="number" id="product-quantity" min="0" required class="form-input">
+                            <label for="product-single-unit">Single Unit *</label>
+                            <input type="text" id="product-single-unit" placeholder="e.g., Tablet, ML, Capsule" required
+                                class="form-input">
                         </div>
 
                         <div class="form-group">
-                            <label for="product-price">Price (₹) *</label>
+                            <label for="product-conversion">Conversion (Single units per package) *</label>
+                            <input type="number" id="product-conversion" min="1" placeholder="e.g., 10" required
+                                class="form-input">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="product-price">Package Price (₹) *</label>
                             <input type="number" id="product-price" min="0" step="0.01" required class="form-input">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="product-single-price">Single Unit Price (₹)</label>
+                            <input type="text" id="product-single-price" readonly class="form-input"
+                                style="background-color: #e8f5f3; color: #1a1a2e; font-weight: 600; border: 2px solid #00A896;">
                         </div>
 
                         <div class="form-group">
@@ -91,13 +104,13 @@
                         </div>
 
                         <div class="form-group full-width">
-                            <label>Product Images (Upload 2 or more) *</label>
+                            <label>Product Images (Optional)</label>
                             <div class="image-upload-container">
                                 <input type="file" id="product-images" accept="image/*" multiple class="file-input">
                                 <label for="product-images" class="file-label">
                                     <span class="upload-icon">📷</span>
-                                    <span>Click to upload images</span>
-                                    <span class="upload-hint">Minimum 2 images required</span>
+                                    <span>Click to upload images (Optional)</span>
+                                    <span class="upload-hint">💊 Medical symbol will be used if no image uploaded</span>
                                 </label>
                             </div>
                             <div id="image-preview-container" class="image-preview-container">
@@ -121,10 +134,10 @@
                             <th>Image</th>
                             <th>Name</th>
                             <th>Category</th>
-                            <th>Unit</th>
-                            <th>Quantity</th>
+                            <th>Unit Conversion</th>
                             <th>Composition</th>
-                            <th>Price</th>
+                            <th>Package Price</th>
+                            <th>Unit Price</th>
                             <th>Discount</th>
                             <th>Actions</th>
                         </tr>
